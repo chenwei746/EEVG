@@ -27,7 +27,7 @@ Finally, the `./data/image_data` folder will have the following structure:
    |-- visual-genome
 ```
 
-2.Download data indices provided by us and place them in `./mask_data` folder
+2.Download data labels [here](https://hkustconnect-my.sharepoint.com/:u:/g/personal/wchendb_connect_ust_hk/EbiPljj4dx5Ns-tAf3zR8_UBxiuM7kRh2VHKPoI6q58TcQ?e=WleUng) and place them in `./mask_data` folder
 
 
 
@@ -59,9 +59,9 @@ Download the following checkpoints and place them in the `./checkpoints` folder.
      --max_query_len 40 \
      --lr_scheduler poly \
      --is_segment \
+     --is_eliminate \
      --vl_enc_layers 3 \
      --dim_feedforward 1024 \
-     --is_decoder \
      --loss_alpha 0.1 \
      --epochs 150 \
      --output_dir outputs/refcocog_ViTDet >refcocog_ViTDet.txt 2>&1 &
@@ -80,7 +80,7 @@ Download the following checkpoints and place them in the `./checkpoints` folder.
     --dim_feedforward 1024 \
     --eval_model ./outputs/refcocog_ViTDet/best_mask_checkpoint.pth \
     --output_dir ./outputs/refcocog_ViTDet \
-    --is_segment --is_decoder 
+    --is_segment --is_eliminate
     ```
     Please refer to [test.sh](test.sh) for evaluation commands on other splits or datasets.
 
@@ -136,10 +136,4 @@ Download the following checkpoints and place them in the `./checkpoints` folder.
 
 ### Our checkpoints
 
-Our checkpoints will be uploaded when code is published.
-
-
-
-
-### TODO
-- [ ] Upload model checkpoints and mask data
+Our checkpoints are available at [OneDrive](https://hkustconnect-my.sharepoint.com/:f:/g/personal/wchendb_connect_ust_hk/EvQKjSt_RipOp0Xsiyso75YBUgWpIw3DQGqMaXldIb_aaQ?e=0w3oEb).
