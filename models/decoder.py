@@ -6,8 +6,7 @@ from torch import Tensor
 import torch.nn.functional as F
 from torch.nn.modules.transformer import _get_clones
 from .decoder_layer import TransformerDecoderLayer
-
-PATCH_LEN, ELIMINATED_THRESHOLD = 28, 0.015
+from .EEVG import PATCH_LEN, ELIMINATED_THRESHOLD
 
 
 def with_pos_embed(tensor, pos: Optional[Tensor]):

@@ -4,10 +4,16 @@ import torch.nn.functional as F
 
 from .visual_model.visual_backbone import build_visual
 from .language_model.bert import build_bert
-from .decoder import TransformerDecoder
 from torch import Tensor
 from typing import Optional
 
+PATCH_LEN, ELIMINATED_THRESHOLD = None, 0.015
+PATCH_LEN_DICT = {
+    "SwinT": 32,
+    "ViTDet": 28,
+    "DarkNet53": 20,
+    "ResNet101": 20
+}
 
 class NestedTensor(object):
     def __init__(self, tensors, mask: Optional[Tensor]):
@@ -38,6 +44,8 @@ class EEVG(nn.Module):
         hidden_dim = args.vl_hidden_dim
         self.num_visu_token = 32 ** 2 if args.backbone == "SwinT" else 28 ** 2
         self.num_text_token = args.max_query_len
+        global PATCH_LEN
+        PATCH_LEN = PATCH_LEN_DICT[args.backbone]
 
         self.visumodel = build_visual(args)
         self.textmodel = build_bert(args)
@@ -59,6 +67,7 @@ class EEVG(nn.Module):
         )
         print("dim_feedforward", args.dim_feedforward)
 
+        from .decoder import TransformerDecoder
         self.decoder = TransformerDecoder(decoder, patch_length=self.patch_length, eliminated_threshold=args.eliminated_threshold)
 
         if self.is_segment:
