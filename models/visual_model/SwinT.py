@@ -684,12 +684,12 @@ class SwinTransformer(nn.Module):
 
         self._freeze_stages()
 
-        self.conv = nn.Sequential(nn.Conv2d(256, 512, 3, padding=1),
-                                  nn.BatchNorm2d(512),
+        self.conv = nn.Sequential(nn.Conv2d(embed_dim*2, embed_dim*4, 3, padding=1),
+                                  nn.BatchNorm2d(embed_dim*4),
                                   nn.ReLU(),
                                   nn.MaxPool2d(kernel_size=2, stride=2),
-                                  nn.Conv2d(512, 512, 3, padding=1),
-                                  nn.BatchNorm2d(512),
+                                  nn.Conv2d(embed_dim*4, embed_dim*4, 3, padding=1),
+                                  nn.BatchNorm2d(embed_dim*4),
                                   nn.ReLU())
 
     def _freeze_stages(self):
@@ -773,8 +773,14 @@ class SwinTransformer(nn.Module):
         return outs
 
 
-def build_SwinT(arg={}):
-    arg = dict(pretrain_img_size=384, window_size=12, embed_dim=128, out_indices=[2, 1],
-               depths=[2, 2, 18, 2], num_heads=[4, 8, 16, 32])
+def build_SwinT(name):
+    if name == 'SwinT':
+        arg = dict(pretrain_img_size=384, window_size=12, embed_dim=128, out_indices=[2, 1],
+                depths=[2, 2, 18, 2], num_heads=[4, 8, 16, 32])
+    elif name == 'SwinT-S':
+        arg = dict(pretrain_img_size=224, window_size=7, embed_dim=96, out_indices=[2, 1],
+                depths=[2, 2, 18, 2], num_heads=[3, 6, 12, 24])
+    else:
+        raise NotImplementedError
     SwinT = SwinTransformer(**arg)
     return SwinT

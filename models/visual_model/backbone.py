@@ -56,12 +56,10 @@ class BackboneBase(nn.Module):
 
     def __init__(self, name: str, backbone: nn.Module, num_channels: int):
         super().__init__()
-        if name == "SwinT":
-            self.body = backbone
-        elif name == "ViTDet":
+        if name == "SwinT" or name == "SwinT-S" or name == "ViTDet":
             self.body = backbone
         self.num_channels = num_channels
-        if name == "SwinT":
+        if name == "SwinT" or name == "SwinT-S":
             self.size = (backbone.length, backbone.length)
         elif name == "ViTDet":
             self.size = (28, 28)
@@ -83,10 +81,14 @@ class Backbone(BackboneBase):
     """ResNet backbone with frozen BatchNorm."""
 
     def __init__(self, name: str):
-        assert name in ('SwinT', 'ViTDet')
+        assert name in ('SwinT', 'ViTDet', 'SwinT-S')
         if name == 'SwinT':
-            backbone = build_SwinT()
+            backbone = build_SwinT(name)
             ckpt_path = "./checkpoints/swin_base_patch4_window12_384_22k.pth"
+            backbone.init_weights(pretrained=ckpt_path)
+        elif name == 'SwinT-S':
+            backbone = build_SwinT(name)
+            ckpt_path = "./checkpoints/swin_small_patch4_window7_224_22k.pth"
             backbone.init_weights(pretrained=ckpt_path)
         elif name == 'ViTDet':
             backbone = build_ViTDet()
@@ -103,6 +105,8 @@ class Backbone(BackboneBase):
             backbone.load_state_dict(new_dict, strict=False)
         if name == "SwinT":
             num_channels = 512
+        elif name == "SwinT-S":
+            num_channels = 384
         elif name == "ViTDet":
             num_channels = 768
         else:

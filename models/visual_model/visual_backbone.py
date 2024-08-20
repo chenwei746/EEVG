@@ -27,7 +27,7 @@ class VisualBackbone(nn.Module):
         src, mask = features[-1].decompose()
         assert mask is not None
 
-        if self.backbone_name != 'SwinT' and self.backbone_name != 'ViTDet':
+        if 'SwinT' not in self.backbone_name and self.backbone_name != 'ViTDet':
             out = [mask.flatten(1), src.flatten(2).permute(2, 0, 1)]
         else:
             out = [mask.flatten(1), src.permute(1, 0, 2)]
